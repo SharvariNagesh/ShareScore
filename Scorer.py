@@ -76,7 +76,7 @@ class Scorer :
             scoreSC = self.shareCountReductionCheck() 
             scoreBG = self.calculateFromBusinessGrowth()
             score = scoreROE + scoreROTC + scoreOM + scoreNM + scoreCR + scoreDTNP + scoreSC + scoreBG
-            comment = "ROE Score : " + str(scoreROE) + \
+            scoreSummary = "ROE Score : " + str(scoreROE) + \
                     "\n ROTC Score: " + str(scoreROTC) + \
                     "\n Operation Margin score: " + str(scoreOM) +\
                     "\n Net Profit Margin Score: " + str(scoreNM) + \
@@ -85,7 +85,7 @@ class Scorer :
                     "\n Share Count Reduction Check score : " + str(scoreSC) +\
                     "\n Business Growth score: " + str(scoreBG) + \
                     "\n TOTAL SCORE: " + str(score)
-            self.scoreList.append({ "Score" : score, "Comment" : comment})
+            self.scoreList.append({ "Score" : score, "Score Summary" : scoreSummary})
         scoreListDf = pd.DataFrame(self.scoreList, index = self.financialData.index.values.tolist())
         finDataWithScore = pd.concat([self.financialData, scoreListDf], axis=1, sort=False)
         # print(finDataWithScore)

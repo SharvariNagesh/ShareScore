@@ -1,0 +1,108 @@
+                    POSTGRESQL SETUP: 
+                  ---------------------
+                  
+* Steps to set up DB:
+1. install postgreSQL with pgAdmin
+2. create a database
+    create DATABASE ShareScore;
+
+3. Install psycopg2 module as follows:
+   conda install psycopg2
+   
+4. Create basic table:
+================== BASIC DATA TABLE======================
+
+CREATE TABLE public."sharebasic"
+(
+	id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "name" character varying(250) COLLATE pg_catalog."default" NOT NULL,
+	"avg_score" numeric,
+    "high_score" numeric,
+    "eps_cagr" numeric,
+	"netprofit_cagr" numeric,
+	"company_overview" text COLLATE pg_catalog."default",
+    "comments" text COLLATE pg_catalog."default",
+    "price" numeric,
+    "low52" numeric,
+    "high52" numeric,
+    "sector" character varying(100) COLLATE pg_catalog."default",    
+    "market_cap" character varying(200) COLLATE pg_catalog."default",
+    "pe" numeric,
+    "book_value" numeric,
+    "dividend" numeric,
+    "industry_pe" numeric,
+    "eps" numeric,
+    "pc" numeric,
+    "price_to_book" numeric,
+    "dividend_yield" numeric,
+    "face_value" numeric,
+	"url" character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "sharebasic_pkey" PRIMARY KEY ("name", id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."ShareBasic"
+    OWNER to postgres;
+COMMENT ON TABLE public."ShareBasic"
+    IS 'To store the basic data of shares';
+    
+    
+    
+  ================== FINANCIAL DATA TABLE======================  
+
+CREATE TABLE public."financialdata"
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "company_name" character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    "year" character varying(20),
+    "share_capital" numeric,
+    "reserves" numeric,
+    "total_shareholders_fund" numeric,
+    "total_noncurrent_liability" numeric,
+    "total_current_liabilities" numeric,
+    "total_capital_and_liabilities" numeric,
+    "total_revenue" numeric,
+    "total_expenses" numeric,
+    "profit_loss_before_tax" numeric,
+    "current_tax" numeric,    
+    "profit_loss_for_the_period" numeric,
+    "basic_eps" numeric,
+    "equity_share_dividend" numeric,
+    "pbdit_margin" numeric,
+    "net_profit_margin" numeric,
+    "roe" numeric,
+    "rotc" numeric,
+    "debt_to_equity" numeric,
+    "current_ratio" numeric,
+    "dividend_payout_ratio" numeric,
+    "earnings_retention_ratio" numeric,
+    "score" numeric,
+    "score_summary" text COLLATE pg_catalog."default",
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "financialdata_pkey" PRIMARY KEY ("company_name", id)
+)
+============================================================
+5. Create Financial Data table :
+6. create a user:
+Reference: https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html
+CREATE USER <userid> WITH PASSWORD '<password>';
+
+CREATE USER shareUser with password 'Share123';
+
+7. Grant permissio to the user
+
+CREATE ROLE share_user with password 'share123';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public to share_user;
+
+GRANT CONNECT ON DATABASE sharescore TO share_user;
+
+ALTER ROLE "share_user" WITH LOGIN;
+
+BASIC DATA SCRAPPED:
+BasicScrapper.py scrapps the basic data about the company and a sample looks like this:
+{'name': 'Bosch Ltd.', 'url': 'https://www.moneycontrol.com/india/stockpricequote/auto-ancillaries/bosch/B05', 'price': 9916.4, '52low': 7874.0, '52high': 18133.2, 'sector': 'Auto Ancillaries', 'Company Overview': 'Bosch Ltd is Indias largest auto component manufacturer.The company`s activities can be classified under the following divisions Automotive Technology i.e. Diesel and Gasoline Fuel Injection Systems, Blaupunkt Car Multimedia Systems, Auto Electricals and Accessories, Starters and Motors, Energy and Body Systems;Industrial Technology i.e.Packaging Machines, & Special Purpose Machines and Consumer Goods and Building Technology i.e.Power Tools, Security Systems,etc.The company also in the business activities of Automotive Product.', 'Market Cap (Rs Cr.)': 29214.78, 'P/E': 29.83, 'Book Value (Rs)': 3091.44, 'Dividend (%)': 1050.0, 'Industry P/E': 15.69, 'EPS (TTM)': 332.42, 'P/C': 21.09, 'Price/Book': 3.2, 'Dividend Yield.(%)': 1.06, 'Face Value (RS)': 10.0}
+
+
