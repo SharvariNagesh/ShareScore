@@ -35,20 +35,13 @@ def updateBasicData(basicSheet, finData):
 def readFinancialData(nav,basicSheet):
     
     balancedata = BalanceSheetScrapper.BalanceSheetScrapper(nav['BalanceSheet']).readBalanceSheet()
-    # if(balancedata.empty() ):
-    #     raise Exception("ERROR: Balance data collection failed")
-    # print("Balance Sheet processed")
+    print("Balance Sheet processed")
     
     pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss']).readPL()   
-    # if(pldata.empty() ):
-    #     raise Exception("ERROR: Profit and loss data collection failed")
-
-    # print("Profit & Loss Sheet processed")
+    print("Profit & Loss Sheet processed")
     
     ratiodata = RatioScrapper.RatoiSheetScrapper(nav['RatioSheet']).readSheet()
-    # if(ratiodata.empty() ):
-    #     raise Exception("ERROR:  Ratio data collection failed")
-    # print("Ratio Sheet processed")
+    print("Ratio Sheet processed")
     
     frames = [balancedata, pldata, ratiodata]
     finData = pd.concat(frames,sort=False,axis=1,)
@@ -60,7 +53,7 @@ def readFinancialData(nav,basicSheet):
   
 
 def writeToFile(basicSheet, finData):
-    print("Writing Fin Data")
+    # print("Writing Fin Data")
     if( pathlib.Path("financial_data.csv").exists()):
         finData.to_csv (r'financial_data.csv' , mode='a', header=False)
     else:
@@ -99,12 +92,12 @@ def processUrl(data):
 #If command line parameters are passed, the program reads from the file. 
 #Usage: python <Python file> file <company list file>
 # If no command line is passed, then it reads urls from command line
-if(len(sys.argv)>1 and sys.argv[1].lower == 'file'):
+if(len(sys.argv)>1 and sys.argv[1].lower() == 'file'):
     try:
         file = open(sys.argv[2], 'r') 
         lines = file.readlines() 
     except (Exception) as error :
-        print("ERROR: Failed to read the data from: ",line ,error)
+        print("ERROR: Failed to read the data from: " ,error)
         sys.exit()
         
     for line in lines: 
