@@ -10,7 +10,6 @@ import scrapper as sc
 import pandas as pd
 
 class BalanceSheetScrapper :
-    # URL = 'http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05' #Quarterly result of page industries\
     COLUMNS_NEEDED = ['Year','Equity Share Capital','Reserves And Surplus','Total Shareholders Funds','Total Non-Current Liabilities','Total Current Liabilities','Total Capital And Liabilities']
     def __init__(self,url):
         self.UrlList = url
@@ -29,20 +28,18 @@ class BalanceSheetScrapper :
                 finData = self.callScrapper(self.UrlList['standalone'])
             except:
                 print("WARNING!: Data could not be extracted for :", self.UrlList)
-                finData = {}
-                return finData
-        pd.set_option('display.max_columns', None)
-        # print(finData.columns)
+                raise Exception("ERROR: Balance sheet data collection failed. Tried both Consolidated and Standalone")
+        
         balanceSheet = finData[self.COLUMNS_NEEDED]
-        # ShareCapitalChange = (pl.iloc[-1]['Equity Share Capital']) - (pl.loc[0]['Equity Share Capital'])
-        # pl['Share Capital Change'] = ShareCapitalChange
         balanceSheet.set_index("Year",inplace = True)
         return balanceSheet
 
 
 
 # print("Hello")
-# url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/balance-sheetVI/NI#NI', 'consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-balance-sheetVI/NI#NI'}
+# # url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/balance-sheetVI/NI#NI', 'consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-balance-sheetVI/NI#NI'}
+# url= {'standalone':'https://www.moneycontrol.com/financials/monsantoindia/balance-sheetVI/MI39#MI39', 'consolidated':'https://www.moneycontrol.com/financials/monsantoindia/consolidated-balance-sheetVI/MI39#MI39'}
+
 # pls = BalanceSheetScrapper(url)
 # pl = pls.readBalanceSheet()
 # print(pl)

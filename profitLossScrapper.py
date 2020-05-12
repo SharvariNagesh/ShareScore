@@ -30,10 +30,10 @@ class ProfitLossScrapper :
                 finData = self.callScrapper(self.UrlList['standalone'])
             except:
                  print("WARNING!: Data could not be extracted for :", self.UrlList)
-                 finData = {}
-                 return finData
+                 raise Exception("ERROR: Profit & Loss data collection failed. Tried both Consolidated and Standalone")
 
         pd.set_option('display.max_columns', None)
+        pl = None
         
         pl = finData[self.COLUMNS_NEEDED]
         pl.set_index("Year",inplace = True)

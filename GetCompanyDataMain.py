@@ -17,6 +17,7 @@ import pandas as pd
 import Scorer
 import Util
 import DBWriter
+import time
 
 
 def updateBasicData(basicSheet, finData):
@@ -34,13 +35,21 @@ def updateBasicData(basicSheet, finData):
 def readFinancialData(nav,basicSheet):
     
     balancedata = BalanceSheetScrapper.BalanceSheetScrapper(nav['BalanceSheet']).readBalanceSheet()
-    print("Balance Sheet processed")
+    # if(balancedata.empty() ):
+    #     raise Exception("ERROR: Balance data collection failed")
+    # print("Balance Sheet processed")
     
-    pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss']).readPL()
-    print("Profit & Loss Sheet processed")
+    pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss']).readPL()   
+    # if(pldata.empty() ):
+    #     raise Exception("ERROR: Profit and loss data collection failed")
+
+    # print("Profit & Loss Sheet processed")
     
     ratiodata = RatioScrapper.RatoiSheetScrapper(nav['RatioSheet']).readSheet()
-    print("Ratio Sheet processed")
+    # if(ratiodata.empty() ):
+    #     raise Exception("ERROR:  Ratio data collection failed")
+    # print("Ratio Sheet processed")
+    
     frames = [balancedata, pldata, ratiodata]
     finData = pd.concat(frames,sort=False,axis=1,)
     finData.insert(loc=0,column='Company Name', value=(basicSheet['name'] * len(finData)))
@@ -75,22 +84,48 @@ def writeData(basicSheet, finData):
     dbWriter = DBWriter.DBWriter()
     dbWriter.basicDataToDB(basicSheet)
     dbWriter.finDataToDB(finData)
-    
-print("Enter URL to process :")
 
-while True:
-    data = input("Please enter the company URL:\n")
-    if 'exit' == data.lower():
-        print("Breaking")
-        break
-    print("Processing:", data)
+def processUrl(data):
     nav = Navigator.Navigator(data).getFinancialUrls()
-    print(nav)
     basicSheet = BasicsScrapper.BasicsScrapper(nav['Basic']).readPage()
-    print("Basic Sheet processed")
+    # print("Basic Sheet processed")
     finData = readFinancialData(nav,basicSheet)
-    basicSheet = updateBasicData(basicSheet, finData)
+    if(not finData is None):
+        basicSheet = updateBasicData(basicSheet, finData)
+        writeData(basicSheet, finData)
+        print("finished processing ", data)
+        time.sleep(15)
     
-    print(basicSheet)
-    print(finData)
-    writeData(basicSheet, finData)
+#If command line parameters are passed, the program reads from the file. 
+#Usage: python <Python file> file <company list file>
+# If no command line is passed, then it reads urls from command line
+if(len(sys.argv)>1 and sys.argv[1].lower == 'file'):
+    try:
+        file = open(sys.argv[2], 'r') 
+        lines = file.readlines() 
+    except (Exception) as error :
+        print("ERROR: Failed to read the data from: ",line ,error)
+        sys.exit()
+        
+    for line in lines: 
+        try:   
+            data = line.strip()
+            print("Processing:", data)
+            processUrl(data)
+        except (Exception) as error :
+            print("ERROR: Failed to read the data: ",error)
+   
+else:
+    print("Enter URL to process :")
+    
+    while True:
+        try: 
+            data = input("Please enter the company URL:\n")
+            if 'exit' == data.lower():
+                print("Breaking")
+                break
+            processUrl(data)
+        except (Exception) as error :
+            print("ERROR: Failed to read the data: ",error)
+
+   

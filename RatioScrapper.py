@@ -33,15 +33,11 @@ class RatoiSheetScrapper :
                 finData = self.callScrapper(self.UrlList['standalone'])
             except:
                 print("WARNING!: Data could not be extracted for :", self.UrlList)
-                finData = {}
-                return finData
+                raise Exception("ERROR: Ratio sheet data collection failed. Tried both Consolidated and Standalone")
         pd.set_option('display.max_columns', None)
-        # print(finData.columns)
         ratio = finData[self.COLUMNS_NEEDED]
         ratio.set_index("Year",inplace = True)
         return ratio
-
-
 
 
 

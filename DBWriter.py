@@ -14,14 +14,14 @@ class DBWriter:
 
     def __init__(self):
         self.dbConnect()
+        register_adapter(numpy.float64, self.addapt_numpy_float64)
+        register_adapter(numpy.int64, self.addapt_numpy_int64)
 
     def __del__(self):
         if(self.connection is not None):
             # self.cursor.close()
             self.connection.close()
-            print("PostgreSQL connection is closed")
-        register_adapter(numpy.float64, self.addapt_numpy_float64)
-        register_adapter(numpy.int64, self.addapt_numpy_int64)
+      
         
         
     # psycopg2 had some issue with writing np.int64 into the DB. so the below 2 functions and registering adapter in the 
@@ -47,19 +47,19 @@ class DBWriter:
         try:
             if(not self.connection):
                 
-                "ERROR: DB CONNECTION IS NOT LIVE!"
+                print("ERROR: DB CONNECTION IS NOT LIVE!")
                 return None
             
             self.cursor.execute(postgresQyery, recordToInsert)
 
             self.connection.commit()
             count = self.cursor.rowcount
-            print (count, "Record inserted successfully into the table")
+            # print (count, "Record inserted successfully into the table")
 
         except (Exception, psycopg2.Error) as error :
             if(self.connection):
-                print("Failed to insert record into the table", error)
-                print("Query : ", postgresQyery)
+                print("ERROR: Failed to insert record into the table", error)
+                print("Query : ", postgresQyery, recordToInsert)
 
         
     def basicDataToDB(self, bD):

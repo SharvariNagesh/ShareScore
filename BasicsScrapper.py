@@ -27,32 +27,39 @@ class BasicsScrapper :
         return soup
 
     def readPage(self):
+        
         soup = self.getPage()
         basicData ={}
+        #Name extraction is kept out of try block because, I want the processing of the data to stop in case name extraction is not done
+        # If extraction of any other column is failed, it's ok, as other basic data columns are not used to rate/score the company.
         name = soup.find("h1", class_="pcstname").text
         basicData["name"] = name
         basicData["url"] = self.url
-        price = to_float(soup.find("span", class_="txt15B nse_span_price_wrap hidden-xs").text)
-        basicData["price"] = price
-        div52HiLo = soup.find("div", class_="clearfix lowhigh_band week52_lowhigh_wrap")
-        low52 = to_float(div52HiLo.find("div", class_="low_high1").text)
-        high52 = to_float(div52HiLo.find("div", class_="low_high3").text)
-        basicData["52low"] = low52
-        basicData["52high"] = high52
-   
-        sector = soup.find("p", class_="bsns_pcst disin").find("span", class_="hidden-lg").text
-        basicData["sector"] = sector
-        companyOverview = soup.find("div", class_="morepls_cnt").text
-        basicData["Company Overview"] = companyOverview
-        basicRatios = soup.find("div", id="consolidated_valuation")
-        rationList = basicRatios.find_all("li", class_="clearfix")
-        for ratio in rationList:
-            key = ratio.find("div", class_="value_txtfl").text
-            if ( key  in self.COLUMNS_NEEDED):
-                value = to_float(ratio.find("div", class_="value_txtfr").text)
-                basicData[key] = value
-        return basicData
-    
+        try:
+            price = to_float(soup.find("span", class_="txt15B nse_span_price_wrap hidden-xs").text)
+            basicData["price"] = price
+            div52HiLo = soup.find("div", class_="clearfix lowhigh_band week52_lowhigh_wrap")
+            low52 = to_float(div52HiLo.find("div", class_="low_high1").text)
+            high52 = to_float(div52HiLo.find("div", class_="low_high3").text)
+            basicData["52low"] = low52
+            basicData["52high"] = high52
+       
+            sector = soup.find("p", class_="bsns_pcst disin").find("span", class_="hidden-lg").text
+            basicData["sector"] = sector
+            companyOverview = soup.find("div", class_="morepls_cnt").text
+            basicData["Company Overview"] = companyOverview
+            basicRatios = soup.find("div", id="consolidated_valuation")
+            rationList = basicRatios.find_all("li", class_="clearfix")
+            for ratio in rationList:
+                key = ratio.find("div", class_="value_txtfl").text
+                if ( key  in self.COLUMNS_NEEDED):
+                    value = to_float(ratio.find("div", class_="value_txtfr").text)
+                    basicData[key] = value
+            return basicData
+        except (Exception) as error : #If Basic data collection fails, continue with whatever is collected
+            print("ERROR: Failed to read Basic data for url : ", self.url ,error)
+            return basicData
+        
  
 # bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/auto-ancillaries/bosch/B05")
 # print(bscS.readPage())
