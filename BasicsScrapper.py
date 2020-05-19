@@ -29,7 +29,7 @@ class BasicsScrapper :
     def readPage(self):
         
         soup = self.getPage()
-        basicData ={}
+        basicData ={'name':'','Avg Score':0,'Highest Score':0,'Company Overview':' ','price':0,'52low':0, '52high':0, 'sector':'','Market Cap (Rs Cr.)':0,'P/E':0,'Book Value (Rs)':0,'Dividend (%)':0,'Industry P/E':0,'EPS (TTM)':0,'P/C':0,'Price/Book':0,'Dividend Yield.(%)':0,'Face Value (RS)':0,'url':''}
         #Name extraction is kept out of try block because, I want the processing of the data to stop in case name extraction is not done
         # If extraction of any other column is failed, it's ok, as other basic data columns are not used to rate/score the company.
         name = soup.find("h1", class_="pcstname").text
@@ -55,11 +55,12 @@ class BasicsScrapper :
                 if ( key  in self.COLUMNS_NEEDED):
                     value = to_float(ratio.find("div", class_="value_txtfr").text)
                     basicData[key] = value
-            return basicData
+
         except (Exception) as error : #If Basic data collection fails, continue with whatever is collected
             print("ERROR: Failed to read Basic data for url : ", self.url ,error)
-            return basicData
+            
+        return basicData
         
  
-# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/auto-ancillaries/bosch/B05")
+# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/constructioncontracting-civil/pspprojects/PP26")
 # print(bscS.readPage())

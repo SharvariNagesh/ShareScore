@@ -20,6 +20,7 @@ import DBWriter
 import time
 
 
+    
 def updateBasicData(basicSheet, finData):
     
     avgScore = finData["Score"].mean()
@@ -61,7 +62,7 @@ def writeToFile(basicSheet, finData):
     
 # writing a dictionary to a file
 # Ref : https://www.tutorialspoint.com/How-to-save-a-Python-Dictionary-to-CSV-file
-# try:
+# try:  
 #     with open(csv_file, 'w') as csvfile:
 #         writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
 #         writer.writeheader()
@@ -73,8 +74,6 @@ def writeToFile(basicSheet, finData):
 def writeData(basicSheet, finData):
    
     writeToFile(basicSheet, finData)
-    
-    dbWriter = DBWriter.DBWriter()
     dbWriter.basicDataToDB(basicSheet)
     dbWriter.finDataToDB(finData)
 
@@ -87,11 +86,12 @@ def processUrl(data):
         basicSheet = updateBasicData(basicSheet, finData)
         writeData(basicSheet, finData)
         print("finished processing ", data)
-        time.sleep(15)
+        time.sleep(5)
     
-#If command line parameters are passed, the program reads from the file. 
+#If command line parameters are passed, the program reads from the file.    
 #Usage: python <Python file> file <company list file>
 # If no command line is passed, then it reads urls from command line
+dbWriter = DBWriter.DBWriter()
 if(len(sys.argv)>1 and sys.argv[1].lower() == 'file'):
     try:
         file = open(sys.argv[2], 'r') 
@@ -106,7 +106,7 @@ if(len(sys.argv)>1 and sys.argv[1].lower() == 'file'):
             print("Processing:", data)
             processUrl(data)
         except (Exception) as error :
-            print("ERROR: Failed to read the data: ",error)
+            print("ERROR: Failed to process the data from: ", data,error)
    
 else:
     print("Enter URL to process :")
@@ -119,6 +119,6 @@ else:
                 break
             processUrl(data)
         except (Exception) as error :
-            print("ERROR: Failed to read the data: ",error)
+            print("ERROR: Failed to process the data from: ", data,error)
 
    
