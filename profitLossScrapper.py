@@ -10,7 +10,7 @@ import pandas as pd
 
 class ProfitLossScrapper :
     # URL = 'http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05' #Quarterly result of page industries\
-    COLUMNS_NEEDED = ['Year','Total Revenue','Total Expenses','Profit/Loss Before Tax','Current Tax','Profit/Loss For The Period','Basic Eps (Rs.)','Equity Share Dividend']
+    COLUMNS_NEEDED = ['Year','Total Operating Revenues','Total Revenue','Finance Costs','Depreciation And Amortisation Expenses','Total Expenses','Profit/Loss Before Tax','Current Tax','Profit/Loss For The Period','Basic Eps (Rs.)','Equity Share Dividend']
     def __init__(self,url):
         self.UrlList = url
         
@@ -43,7 +43,7 @@ class ProfitLossScrapper :
 # url='http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05'
 # url= {'standalone':'http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05', 'consolidated':'https://www.moneycontrol.com/financials/bosch/consolidated-profit-lossVI/B05#B05'}
 # url= {'standalone':'http://www.moneycontrol.com/financials/nestleindia/profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
-# url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
+# # # url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
 # pls = ProfitLossScrapper(url)
 # pl = pls.readPL()
 # print(pl)

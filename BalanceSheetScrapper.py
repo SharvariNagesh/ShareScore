@@ -10,7 +10,7 @@ import scrapper as sc
 import pandas as pd
 
 class BalanceSheetScrapper :
-    COLUMNS_NEEDED = ['Year','Equity Share Capital','Reserves And Surplus','Total Shareholders Funds','Total Non-Current Liabilities','Total Current Liabilities','Total Capital And Liabilities']
+    COLUMNS_NEEDED = ['Year','Equity Share Capital','Reserves And Surplus','Total Shareholders Funds','Total Non-Current Liabilities','Total Current Liabilities','Total Capital And Liabilities', 'Total Current Assets','Total Assets']
     def __init__(self,url):
         self.UrlList = url
         

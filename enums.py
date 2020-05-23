@@ -42,14 +42,14 @@ class NetProfitMargin(IntEnum):
     def check(self, value):
         return (value >= self.value)
     
-class CurrentRatio(IntEnum):
-    class0 = 100
-    class1 = 50
-    class2 = 30
-    class3 = 0
+# class CurrentRatio(IntEnum):
+#     class0 = 0
+#     class1 = 2
+#     class2 = 5
+#     class3 = 10
     
-    def check(self, value):
-        return (value <= (self.value)/100)
+#     def check(self, value):
+#         return (value > (self.value))
     
 class DebtToNetProfit(IntEnum):
     class0 = 15

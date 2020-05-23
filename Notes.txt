@@ -1,6 +1,36 @@
-                    POSTGRESQL SETUP: 
+Steps to run this application:
+1. Application can be run in 2 ways:
+    a. to fetch the company URLs as input one after the other. 
+    b. to read a file containing a list of URLs. 
+  To read URLs from a file, pass 'file' '<FILE NAME>' to 'GetCompanyDataMain.py' file. when running it from spyder, 
+  click on run menu -> select 'run conguration perfile' -> and set 'file <FILE NAME>'
+  from command line, you can run it as 
+      python3 GetCompanyDataMain.py file <FILE NAME>
+  
+  If you run without the file and <FILE NAME> options, the code will ask you to enter the company URL.
+  To exit the loop enter 'exit'
+  
+Steps to follow to get company data:
+1. Go to screener.in and filter the companies with good record. Some of the queries I used are:
+
+    Return on capital employed > 12% AND
+    Return on equity > 12% AND
+    Market Capitalization > 500 AND
+    Debt To Profit <6 
+
+
+    sales > 250 AND
+    Interest Coverage > 4 AND
+    Return on equity > 15 AND
+    Debt To Profit <7 AND
+    EPS last year > EPS preceding year                
+                
+2.  Screener lists the companies which match the criterian. select the company names one by one and enter that in moneycontrol.com
+3. Take the company url from money control and feed it to 'GetCompanyDataMain.py' file.
+                   POSTGRESQL SETUP: 
                   ---------------------
                   
+                 
 * Steps to set up DB:
 1. install postgreSQL with pgAdmin
 2. create a database

@@ -53,7 +53,7 @@ class DBWriter:
             self.cursor.execute(postgresQyery, recordToInsert)
 
             self.connection.commit()
-            count = self.cursor.rowcount
+            # count = self.cursor.rowcount
             # print (count, "Record inserted successfully into the table")
 
         except (Exception, psycopg2.Error) as error :

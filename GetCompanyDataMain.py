@@ -41,11 +41,15 @@ def readFinancialData(nav,basicSheet):
     pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss']).readPL()   
     print("Profit & Loss Sheet processed")
     
-    ratiodata = RatioScrapper.RatoiSheetScrapper(nav['RatioSheet']).readSheet()
-    print("Ratio Sheet processed")
-    
+    ratiodata = None
+    ratioScrapper = RatioScrapper.RatoiSheetScrapper(nav['RatioSheet'])
+    # try:
+    #     ratiodata = ratioScrapper.readSheet()
+    #     print("Ratio Sheet processed")
+    # except :
+    ratiodata = ratioScrapper.calculateRatio(balancedata, pldata)
     frames = [balancedata, pldata, ratiodata]
-    finData = pd.concat(frames,sort=False,axis=1,)
+    finData = pd.concat(frames,sort=False,axis=1,).astype(float)
     finData.insert(loc=0,column='Company Name', value=(basicSheet['name'] * len(finData)))
     finData.reset_index( inplace = True)
     finData.set_index(["Company Name","Year"],inplace = True)
@@ -115,7 +119,7 @@ else:
         try: 
             data = input("Please enter the company URL:\n")
             if 'exit' == data.lower():
-                print("Breaking")
+                print("Exiting from the code")
                 break
             processUrl(data)
         except (Exception) as error :

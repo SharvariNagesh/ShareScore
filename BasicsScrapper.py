@@ -46,7 +46,7 @@ class BasicsScrapper :
        
             sector = soup.find("p", class_="bsns_pcst disin").find("span", class_="hidden-lg").text
             basicData["sector"] = sector
-            companyOverview = soup.find("div", class_="morepls_cnt").text
+            companyOverview = soup.find("div", class_="morepls_cnt").text if( soup.find("div", class_="morepls_cnt")) else ' '
             basicData["Company Overview"] = companyOverview
             basicRatios = soup.find("div", id="consolidated_valuation")
             rationList = basicRatios.find_all("li", class_="clearfix")
@@ -62,5 +62,5 @@ class BasicsScrapper :
         return basicData
         
  
-# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/constructioncontracting-civil/pspprojects/PP26")
+# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/finance-investments/hdfcassetmanagementcompany/HAM02")
 # print(bscS.readPage())

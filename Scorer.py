@@ -11,7 +11,7 @@ Created on Thu Apr 23 15:58:16 2020
 import scrapper as sc
 import pandas as pd
 import enums
-from enums import ROEnum, OperatingMargin,DebtToNetProfit,NetProfitMargin,CurrentRatio
+from enums import ROEnum, OperatingMargin,DebtToNetProfit,NetProfitMargin
 
 class Scorer :
   
@@ -59,14 +59,18 @@ class Scorer :
         #     print(row_dict)
         self.scoreList=[]
         for i in range(len(self.financialData)):
-            row = self.financialData.iloc[[i]]
+            row = self.financialData.iloc[[i]].astype(float)
             
             scoreROE = enums.getScore(ROEnum, row['Return On Networth/Equity (%)'].values[0]) #ROE
             # comment = ""
             scoreROTC = enums.getScore(ROEnum, row['Return On Capital Employed (%)'].values[0]) #ROTC
             scoreOM =  enums.getScore(OperatingMargin, row['Pbdit Margin (%)'].values[0]) #Operating profit margin
             scoreNM =  enums.getScore(NetProfitMargin, row['Net Profit Margin (%)'].values[0]) #Net profit margin
-            scoreCR =  enums.getScore(CurrentRatio, row['Current Ratio (X)'].values[0]) #Current ratio check
+            scoreCR =0
+            if(row['Current Ratio (X)'].values[0] >= 1):
+                scoreCR =  100
+            else :
+                scoreCR = -100
             debtToNetProfit = row['Total Non-Current Liabilities'].values[0] / row['Profit/Loss For The Period'].values[0]
             scoreDTNP = 0
             if(debtToNetProfit < 0 ): #Company is making loss
