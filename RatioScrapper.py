@@ -88,12 +88,12 @@ class RatoiSheetScrapper :
  
     #Reference: https://www.investopedia.com/terms/d/dividendpayoutratio.asp
     def dividendPayoutRatio(self,plrow):
-        return 0 if(plrow['Profit/Loss For The Period'] ==0) else ffmt(plrow['Equity Share Dividend']/plrow['Profit/Loss For The Period'])
+        return 0 if(plrow['Profit/Loss For The Period'] ==0) else ffmt(plrow['Equity Share Dividend']/plrow['Profit/Loss For The Period'] * 100)
         
         
     #Reference: https://www.investopedia.com/terms/r/retentionratio.asp
     def earningsRetentionRatio(self,plrow):
-        return 0 if(plrow['Profit/Loss For The Period'] ==0) else ffmt((plrow['Profit/Loss For The Period'] -plrow['Equity Share Dividend'])/plrow['Profit/Loss For The Period'])
+        return 0 if(plrow['Profit/Loss For The Period'] ==0) else ffmt((plrow['Profit/Loss For The Period'] -plrow['Equity Share Dividend'])/plrow['Profit/Loss For The Period'] * 100)
     
     def calculateRatio(self,balancedata, pldata):
         ratio = {'Pbdit Margin (%)':[],'Net Profit Margin (%)':[],'Return On Networth/Equity (%)':[],'Return On Capital Employed (%)':[],'Total Debt/Equity (X)':[],'Current Ratio (X)':[],'Dividend Payout Ratio (Np) (%)':[],'Earnings Retention Ratio (%)':[]}

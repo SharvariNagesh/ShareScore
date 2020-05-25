@@ -50,7 +50,7 @@ def readFinancialData(nav,basicSheet):
     ratiodata = ratioScrapper.calculateRatio(balancedata, pldata)
     frames = [balancedata, pldata, ratiodata]
     finData = pd.concat(frames,sort=False,axis=1,).astype(float)
-    finData.insert(loc=0,column='Company Name', value=(basicSheet['name'] * len(finData)))
+    finData.insert(loc=0,column='Company Name', value=(basicSheet['name']))
     finData.reset_index( inplace = True)
     finData.set_index(["Company Name","Year"],inplace = True)
     finDataWithScore = Scorer.Scorer(basicSheet, finData).calculate() 
