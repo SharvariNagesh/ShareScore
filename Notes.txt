@@ -40,6 +40,14 @@ Steps to follow to get company data:
    conda install psycopg2
    
 4. Create basic table:
+
+
+                SETTING UP CHROME DRIVER
+1. Chrome driver needs to be downloaded from https://chromedriver.chromium.org/downloads. The version of chrome driver should be same as the chrome installed on the system.
+2. Currently, the path for chrome driver is hard coaded in Navigator.py. and is used by selenium module.
+3. Copy the downloaded chrome driver into /Users/sharvarinagesh/Technical/Python/webscrap
+4. TODO: Make this path configurable
+
 ================== BASIC DATA TABLE======================
 
 CREATE TABLE public."sharebasic"

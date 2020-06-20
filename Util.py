@@ -18,7 +18,7 @@ def to_float(stringFloat):
 # Reference: https://feliperego.github.io/blog/2016/08/10/CAGR-Function-In-Python
 # This function calculats the compound interest
 def cagr(originalInvestment, returnValue, termInYears):
-    if(originalInvestment==0 or termInYears==0):
+    if(originalInvestment < 1 or termInYears==0):
         print("ERROR: 0 dividend encountered in cagr. originalInvestment: {} & termInYears: {}".format(originalInvestment, termInYears))
         return 0
     CAGR = ((returnValue/originalInvestment)**(1/termInYears)-1) * 100

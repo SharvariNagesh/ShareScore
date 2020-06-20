@@ -33,7 +33,7 @@ class Navigator :
         profitLossUrl = self.driver.find_element_by_css_selector("[title^='Profit & Loss']").get_attribute("href")
         ratioUrl = self.driver.find_element_by_css_selector("[title^='Ratios']").get_attribute("href")
         # ratioUrl = self.driver.find_element_by_link_text("Ratios").get_attribute("href")# Somehow this is not working
-        print(ratioUrl)
+        # print(ratioUrl)
         # ratiosUrl = driver.find_element_by_xpath('//*[@title="Ratios"]').get_attribute("href")
         consolidatedBalanceSheet = self.getConsolidatedUrl(balanceSheetUrl)
         # print('Consolidated balance sheet:', consolidatedBalanceSheet)

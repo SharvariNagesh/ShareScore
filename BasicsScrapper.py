@@ -25,6 +25,15 @@ class BasicsScrapper :
         soup = BeautifulSoup(page.text, 'html.parser')  #pass the page content through BeautifulSoup
         # table = soup.find("table", class_="mctable1")   # All the financial data is in the table "mctable1"
         return soup
+    
+    def readValuation(self,ratioList):
+        valueList = {}
+        for ratio in ratioList:
+            key = ratio.find("div", class_="value_txtfl").text
+            if ( key  in self.COLUMNS_NEEDED):
+                value = to_float(ratio.find("div", class_="value_txtfr").text)
+                valueList[key] = value
+        return valueList
 
     def readPage(self):
         
@@ -49,18 +58,22 @@ class BasicsScrapper :
             companyOverview = soup.find("div", class_="morepls_cnt").text if( soup.find("div", class_="morepls_cnt")) else ' '
             basicData["Company Overview"] = companyOverview
             basicRatios = soup.find("div", id="consolidated_valuation")
-            rationList = basicRatios.find_all("li", class_="clearfix")
-            for ratio in rationList:
-                key = ratio.find("div", class_="value_txtfl").text
-                if ( key  in self.COLUMNS_NEEDED):
-                    value = to_float(ratio.find("div", class_="value_txtfr").text)
-                    basicData[key] = value
-
+            ratioList = basicRatios.find_all("li", class_="clearfix")
+            valueList = self.readValuation(ratioList)
+            if(valueList["P/E"]== 0 and valueList["Book Value (Rs)"]==0):  #Consolidated section does not have any value. We need to read standalone tab
+                print("ERROR: consolidated Value list is empty, reading standalone value list")
+                basicRatios = soup.find("div", id="standalone_valuation")
+                ratioList = basicRatios.find_all("li", class_="clearfix")
+                valueList = self.readValuation(ratioList)
+            basicData.update(valueList)    
+            return basicData
+            
+            
         except (Exception) as error : #If Basic data collection fails, continue with whatever is collected
             print("ERROR: Failed to read Basic data for url : ", self.url ,error)
             
         return basicData
         
  
-# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/finance-investments/hdfcassetmanagementcompany/HAM02")
+# bscS = BasicsScrapper("https://www.moneycontrol.com/india/stockpricequote/textiles-readymade-apparels/pageindustries/PI35")
 # print(bscS.readPage())
