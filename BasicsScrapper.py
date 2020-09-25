@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+    #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr  6 20:34:42 2020
@@ -34,7 +34,15 @@ class BasicsScrapper :
                 value = to_float(ratio.find("div", class_="value_txtfr").text)
                 valueList[key] = value
         return valueList
-
+    
+    def isNotEmpty(self, cssTagVal):
+        if( cssTagVal):
+            return False
+        if('-' in cssTagVal):
+            return False
+    
+        return True
+        
     def readPage(self):
         
         soup = self.getPage()
@@ -55,7 +63,7 @@ class BasicsScrapper :
        
             sector = soup.find("p", class_="bsns_pcst disin").find("span", class_="hidden-lg").text
             basicData["sector"] = sector
-            companyOverview = soup.find("div", class_="morepls_cnt").text if( soup.find("div", class_="morepls_cnt")) else ' '
+            companyOverview = soup.find("div", class_="morepls_cnt").text if( self.isNotEmpty(soup.find("div", class_="morepls_cnt"))) else ' '
             basicData["Company Overview"] = companyOverview
             basicRatios = soup.find("div", id="consolidated_valuation")
             ratioList = basicRatios.find_all("li", class_="clearfix")

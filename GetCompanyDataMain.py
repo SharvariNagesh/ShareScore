@@ -33,12 +33,12 @@ def updateBasicData(basicSheet, finData):
     basicSheet["NetProfit CAGR"] = netProfitCagr
     return basicSheet    
     
-def readFinancialData(nav,basicSheet):
+def readFinancialData(nav,basicSheet, readStandalone):
     
-    balancedata = BalanceSheetScrapper.BalanceSheetScrapper(nav['BalanceSheet']).readBalanceSheet()
+    balancedata = BalanceSheetScrapper.BalanceSheetScrapper(nav['BalanceSheet'],readStandalone).readBalanceSheet()
     print("Balance Sheet processed")
     
-    pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss']).readPL()   
+    pldata = profitLossScrapper.ProfitLossScrapper(nav['ProfitLoss'], readStandalone).readPL()   
     print("Profit & Loss Sheet processed")
     
     ratiodata = None
@@ -81,11 +81,11 @@ def writeData(basicSheet, finData):
     dbWriter.basicDataToDB(basicSheet)
     dbWriter.finDataToDB(finData)
 
-def processUrl(data):
+def processUrl(data, readStandalone):
     nav = Navigator.Navigator(data).getFinancialUrls()
     basicSheet = BasicsScrapper.BasicsScrapper(nav['Basic']).readPage()
     # print("Basic Sheet processed")
-    finData = readFinancialData(nav,basicSheet)
+    finData = readFinancialData(nav,basicSheet, readStandalone)
     if(not finData is None):
         basicSheet = updateBasicData(basicSheet, finData)
         writeData(basicSheet, finData)
@@ -95,6 +95,7 @@ def processUrl(data):
 #If command line parameters are passed, the program reads from the file.    
 #Usage: python <Python file> file <company list file>
 # If no command line is passed, then it reads urls from command line
+pd.set_option('display.max_columns', None)
 dbWriter = DBWriter.DBWriter()
 if(len(sys.argv)>1 and sys.argv[1].lower() == 'file'):
     try:
@@ -108,7 +109,7 @@ if(len(sys.argv)>1 and sys.argv[1].lower() == 'file'):
         try:   
             data = line.strip()
             print("Processing:", data)
-            processUrl(data)
+            processUrl(data, True)
         except (Exception) as error :
             print("ERROR: Failed to process the data from: ", data,error)
    
@@ -121,7 +122,14 @@ else:
             if 'exit' == data.lower():
                 print("Exiting from the code")
                 break
-            processUrl(data)
+            readStandalone = input("Read Only Standalone? (y/n):\n")
+            if 'y' == readStandalone.lower():
+                print("Reading Standalone data")
+                readStandalone = True
+            else:
+                print("Reading Consolidated data")
+                readStandalone = False
+            processUrl(data, readStandalone)
         except (Exception) as error :
             print("ERROR: Failed to process the data from: ", data,error)
 

@@ -60,6 +60,7 @@ class Navigator :
         #     }
         # }
         # return url
+    
 
 # url="https://www.moneycontrol.com/india/stockpricequote/auto-ancillaries/amararajabatteries/ARB"
 # urls = Navigator(url).getFinancialUrls()
