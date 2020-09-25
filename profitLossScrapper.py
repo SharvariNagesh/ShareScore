@@ -30,9 +30,9 @@ class ProfitLossScrapper (FinancialSheetScrapper):
         return pl
 
     
-url= {'standalone':'http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05', 'consolidated':'https://www.moneycontrol.com/financials/bosch/consolidated-profit-lossVI/B05#B05'}
-#url= {'standalone':'http://www.moneycontrol.com/financials/nestleindia/profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
-# # url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
-pls = ProfitLossScrapper(url, True)
-pl = pls.readPL()
-print(pl)
+# url= {'standalone':'http://www.moneycontrol.com/financials/bosch/profit-lossVI/B05', 'consolidated':'https://www.moneycontrol.com/financials/bosch/consolidated-profit-lossVI/B05#B05'}
+# #url= {'standalone':'http://www.moneycontrol.com/financials/nestleindia/profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
+# # # url= {'standalone':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI','consolidated':'https://www.moneycontrol.com/financials/nestleindia/consolidated-profit-lossVI/NI#NI'}
+# pls = ProfitLossScrapper(url, True)
+# pl = pls.readPL()
+# print(pl)
