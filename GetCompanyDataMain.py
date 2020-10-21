@@ -24,6 +24,8 @@ import time
 def updateBasicData(basicSheet, finData):
     
     avgScore = finData["Score"].mean()
+    roce = finData["Return On Capital Employed (%)"].mean()
+    roe  = finData["Return On Networth/Equity (%)"].mean()
     highestScore = finData['Score'].max()
     epsCagr = Util.cagr(finData.iloc[-1]['Basic Eps (Rs.)'], finData.iloc[0]['Basic Eps (Rs.)'], len(finData) - 1)
     netProfitCagr = Util.cagr(finData.iloc[-1]['Profit/Loss For The Period'], finData.iloc[0]['Profit/Loss For The Period'], len(finData) - 1)
@@ -31,6 +33,8 @@ def updateBasicData(basicSheet, finData):
     basicSheet["Highest Score"]= highestScore    
     basicSheet["EPS CAGR"]= epsCagr
     basicSheet["NetProfit CAGR"] = netProfitCagr
+    basicSheet["ROE"] = round(roe, 2)
+    basicSheet["ROCE"] = round(roce, 2)
     return basicSheet    
     
 def readFinancialData(nav,basicSheet, readStandalone):
