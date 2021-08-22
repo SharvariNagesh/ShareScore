@@ -18,8 +18,25 @@ import Scorer
 import Util
 import DBWriter
 import time
+from Util import to_float
 
 
+#Formula : Value(V) = [EPS x ( 8.5 + 2G) x 4.4 ] /Y 
+#"Here EPS is earnings per share. 
+#G is growth of Sales
+#4.4 is bond output at 1964. We will keep it like that for now
+#Y is current 10 year bond yield
+#eg: say eps is 30 and sales growth is 7.5% and 10 bond yield in india is 8.85 then value of the company is:
+#V = [30 x (8.5 + (2 x 7.5) x 4.4]/ 8.85 = "
+def calculateIntrinsicValue(basicSheet):
+    bondYield = 6.23
+    eps= float(to_float(basicSheet['EPS (TTM)']))
+    growth = float( to_float(basicSheet['Sales CAGR']))
+    avgPE = float(15)
+    bondOP = 4.4
+    
+    intrinsicValue = (eps * (avgPE + (2 * growth)) * bondOP )/bondYield
+    return intrinsicValue
     
 def updateBasicData(basicSheet, finData):
     
@@ -29,12 +46,15 @@ def updateBasicData(basicSheet, finData):
     highestScore = finData['Score'].max()
     epsCagr = Util.cagr(finData.iloc[-1]['Basic Eps (Rs.)'], finData.iloc[0]['Basic Eps (Rs.)'], len(finData) - 1)
     netProfitCagr = Util.cagr(finData.iloc[-1]['Profit/Loss For The Period'], finData.iloc[0]['Profit/Loss For The Period'], len(finData) - 1)
+    salesCagr = Util.cagr(finData.iloc[-1]['Total Revenue'], finData.iloc[0]['Total Revenue'], len(finData) - 1)
     basicSheet["Avg Score"]= avgScore
     basicSheet["Highest Score"]= highestScore    
     basicSheet["EPS CAGR"]= epsCagr
     basicSheet["NetProfit CAGR"] = netProfitCagr
+    basicSheet["Sales CAGR"] = salesCagr
     basicSheet["ROE"] = round(roe, 2)
     basicSheet["ROCE"] = round(roce, 2)
+    basicSheet["IntrinsicValue"] = calculateIntrinsicValue(basicSheet)
     return basicSheet    
     
 def readFinancialData(nav,basicSheet, readStandalone):

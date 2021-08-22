@@ -63,8 +63,8 @@ class DBWriter:
 
         
     def basicDataToDB(self, bD):
-        postgresQyery = """ INSERT INTO sharebasic (name, avg_score, high_score, eps_cagr, netprofit_cagr,roe,roce, company_overview, price, low52, high52, sector, market_cap, pe, book_value, dividend, industry_pe, eps, pc, price_to_book, dividend_yield, face_value, url) VALUES (%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s)"""
-        recordToInsert = (bD['name'],bD['Avg Score'],bD['Highest Score'],bD['EPS CAGR'],bD["NetProfit CAGR"],bD['ROE'], bD['ROCE'],bD['Company Overview'],bD['price'],bD['52low'], bD['52high'], bD['sector'],bD['Market Cap (Rs Cr.)'],bD['P/E'],bD['Book Value (Rs)'],bD['Dividend (%)'],bD['Industry P/E'],bD['EPS (TTM)'],bD['P/C'],bD['Price/Book'],bD['Dividend Yield.(%)'],bD['Face Value (RS)'],bD['url'])
+        postgresQyery = """ INSERT INTO sharebasic (name, avg_score, high_score, eps_cagr, netprofit_cagr,roe,roce, company_overview, price, low52, high52, sector, market_cap, pe, book_value, dividend, industry_pe, eps, pc, price_to_book, dividend_yield, face_value, beta, intrinsic_value, sales_cagr, url) VALUES (%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s,%s, %s, %s)"""
+        recordToInsert = (bD['name'],bD['Avg Score'],bD['Highest Score'],bD['EPS CAGR'],bD["NetProfit CAGR"],bD['ROE'], bD['ROCE'],bD['Company Overview'],bD['price'],bD['52low'], bD['52high'], bD['sector'],bD['Market Cap (Rs Cr.)'],bD['P/E'],bD['Book Value (Rs)'],bD['Dividend (%)'],bD['Industry P/E'],bD['EPS (TTM)'],bD['P/C'],bD['Price/Book'],bD['Dividend Yield.(%)'],bD['Face Value (RS)'], bD['Beta'],bD['IntrinsicValue'],bD['Sales CAGR'],bD['url'])
         self.insert(postgresQyery, recordToInsert)
         
     def finDataToDB(self, financiaData):

@@ -36,44 +36,53 @@ class BasicsScrapper :
         return valueList
     
     def isNotEmpty(self, cssTagVal):
-        if( cssTagVal):
+        if(not cssTagVal):
             return False
         if('-' in cssTagVal):
             return False
     
         return True
+    
+    def findIf(self,soup, tag, clas):
+        try:
+            if( self.isNotEmpty(soup.find(tag, class_= clas).text)):
+               return to_float(soup.find(tag, class_=clas).text) 
+        except (Exception) as error : #If Basic data collection fails, continue with whatever is collected
+            print("ERROR: Failed to read tag and class : ", tag,clas ,error)
+        
+        return 0
         
     def readPage(self):
         
         soup = self.getPage()
-        basicData ={'name':'','Avg Score':0,'Highest Score':0,'Company Overview':' ','price':0,'52low':0, '52high':0, 'sector':'','Market Cap (Rs Cr.)':0,'P/E':0,'Book Value (Rs)':0,'Dividend (%)':0,'Industry P/E':0,'EPS (TTM)':0,'P/C':0,'Price/Book':0,'Dividend Yield.(%)':0,'Face Value (RS)':0,'url':''}
+        basicData ={'name':'','Beta':0,'Avg Score':0,'Highest Score':0,'Company Overview':' ','price':0,'52low':0, '52high':0, 'sector':'','Market Cap (Rs Cr.)':0,'P/E':0,'Book Value (Rs)':0,'Dividend (%)':0,'Industry P/E':0,'EPS (TTM)':0,'P/C':0,'Price/Book':0,'Dividend Yield.(%)':0,'Face Value (RS)':0,'url':''}
         #Name extraction is kept out of try block because, I want the processing of the data to stop in case name extraction is not done
         # If extraction of any other column is failed, it's ok, as other basic data columns are not used to rate/score the company.
-        name = soup.find("h1", class_="pcstname").text
-        basicData["name"] = name
+        
         basicData["url"] = self.url
         try:
-            price = to_float(soup.find("span", class_="txt15B nse_span_price_wrap hidden-xs").text)
-            basicData["price"] = price
-            div52HiLo = soup.find("div", class_="clearfix lowhigh_band week52_lowhigh_wrap")
-            low52 = to_float(div52HiLo.find("div", class_="low_high1").text)
-            high52 = to_float(div52HiLo.find("div", class_="low_high3").text)
-            basicData["52low"] = low52
-            basicData["52high"] = high52
-       
-            sector = soup.find("p", class_="bsns_pcst disin").find("span", class_="hidden-lg").text
-            basicData["sector"] = sector
-            companyOverview = soup.find("div", class_="morepls_cnt").text if( self.isNotEmpty(soup.find("div", class_="morepls_cnt"))) else ' '
-            basicData["Company Overview"] = companyOverview
-            basicRatios = soup.find("div", id="consolidated_valuation")
-            ratioList = basicRatios.find_all("li", class_="clearfix")
-            valueList = self.readValuation(ratioList)
-            if(valueList["P/E"]== 0 and valueList["Book Value (Rs)"]==0):  #Consolidated section does not have any value. We need to read standalone tab
-                print("ERROR: consolidated Value list is empty, reading standalone value list")
-                basicRatios = soup.find("div", id="standalone_valuation")
-                ratioList = basicRatios.find_all("li", class_="clearfix")
-                valueList = self.readValuation(ratioList)
-            basicData.update(valueList)    
+            basicDetails = soup.find("div", class_="inid_name")
+            basicData["name"] = basicDetails.find("h1").text
+            basicData["sector"]= ' '.join(basicDetails.find("a").text.split()) # There are some extra spaces
+            basicData["price"] = self.findIf(soup, "div", "inprice1 nsecp")
+            
+            basicData["52low"] = self.findIf(soup, "td", "nseL52 bseL52")
+            basicData["52high"] = self.findIf(soup, "td", "nseH52 bseH52")
+            
+            basicData['Market Cap (Rs Cr.)']=self.findIf(soup, "td", "nsemktcap bsemktcap")
+            basicData['P/E']=self.findIf(soup, "td", "nsepe bsepe")
+            basicData['Book Value (Rs)']= self.findIf(soup,"td", "nsebv bsebv")
+            basicData['Dividend (%)']=0
+            basicData['Industry P/E']=self.findIf(soup, "td", "nsesc_ttm bsesc_ttm")
+            basicData['EPS (TTM)']=self.findIf(soup, "td", "nseceps bseceps")
+            basicData['P/C']=self.findIf(soup, "td", "nseL52 bseL52")
+            basicData['Price/Book']=self.findIf(soup, "td", "nsepb bsepb")
+            basicData['Dividend Yield.(%)']=self.findIf(soup,"td", "nsedy bsedy")
+            basicData['Face Value (RS)']=self.findIf(soup,"td","nsefv bsefv")
+            basicData['Company Overview']=""
+            basicData['Beta']=self.findIf(soup,"span", "nsebeta")
+           
+        
             return basicData
             
             

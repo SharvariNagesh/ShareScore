@@ -29,9 +29,9 @@ class Navigator :
     
     def getFinancialUrls(self):
         self.driver.get(self.url)
-        balanceSheetUrl = self.driver.find_element_by_css_selector("[title^='Balance sheet']").get_attribute("href")
-        profitLossUrl = self.driver.find_element_by_css_selector("[title^='Profit & Loss']").get_attribute("href")
-        ratioUrl = self.driver.find_element_by_css_selector("[title^='Ratios']").get_attribute("href")
+        balanceSheetUrl = self.driver.find_element_by_css_selector("[title='Balance Sheet']").get_attribute("href")
+        profitLossUrl = self.driver.find_element_by_css_selector("[title='Profit & Loss']").get_attribute("href")
+        ratioUrl = self.driver.find_element_by_css_selector("[title='Ratios']").get_attribute("href")
         # ratioUrl = self.driver.find_element_by_link_text("Ratios").get_attribute("href")# Somehow this is not working
         # print(ratioUrl)
         # ratiosUrl = driver.find_element_by_xpath('//*[@title="Ratios"]').get_attribute("href")
@@ -40,7 +40,10 @@ class Navigator :
         consolidatedProfitLossSheet = self.getConsolidatedUrl(profitLossUrl)
         # print('Consolidated profit loss sheet:', consolidatedProfitLossSheet)
         consolidatedRatioSheet = self.getConsolidatedUrl(ratioUrl)
-        urlList ={"Basic":self.url, "BalanceSheet":{"standalone":balanceSheetUrl, "consolidated":consolidatedBalanceSheet}, "ProfitLoss":{"standalone":profitLossUrl, "consolidated":consolidatedProfitLossSheet},"RatioSheet":{"standalone" : ratioUrl, "consolidated":consolidatedRatioSheet }}
+        urlList ={"Basic":self.url, 
+                  "BalanceSheet":{"standalone":balanceSheetUrl, "consolidated":consolidatedBalanceSheet}, 
+                  "ProfitLoss":{"standalone":profitLossUrl, "consolidated":consolidatedProfitLossSheet},
+                  "RatioSheet":{"standalone" : ratioUrl, "consolidated":consolidatedRatioSheet }}
         # pprint.pprint(urlList)
         return urlList
         #Amara raja battery doesn't have much financial data in consolidated form. So just to get data for all the years, i did this below code
